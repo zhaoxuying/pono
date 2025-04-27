@@ -74,9 +74,10 @@ mkdir -p $DEPS
 
 if [ ! -d "$DEPS/smt-switch" ]; then
     cd $DEPS
-    git clone https://github.com/stanford-centaur/smt-switch
+    #git clone https://github.com/stanford-centaur/smt-switch
+    git clone https://github.com/zhaoxuying/smt-switch.git
     cd smt-switch
-    git checkout -f $SMT_SWITCH_VERSION
+    #git checkout -f $SMT_SWITCH_VERSION
     ./contrib/setup-bitwuzla.sh
     if [ $cvc5_home = default ]; then
         ./contrib/setup-cvc5.sh
