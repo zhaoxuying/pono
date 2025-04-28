@@ -71,6 +71,9 @@ static std::string as_bits(std::string val)
   //       to support other solvers, we need to be more general
   std::string res = val;
 
+  if (val == "true") return "b1";
+  if (val == "false") return "b0";
+
   if (val.length() < 2) {
     throw PonoException("Don't know how to interpret value: " + val);
   }
@@ -300,7 +303,15 @@ void VCDWitnessPrinter::check_insert_scope(std::string full_name,
     }
   }  // at the end of this loop, we are at the scope to insert our variable
   const auto & short_name = scopes.back();
-  uint64_t width = ast->get_sort()->get_width();
+//  uint64_t width = ast->get_sort()->get_width();
+  const smt::Sort & sort = ast->get_sort();
+  smt::SortKind kind = sort->get_sort_kind();  // 获取类型枚举
+  uint64_t width;
+  if (kind == smt::BV) {
+      width = ast->get_sort()->get_width();
+  } else if (kind == smt::BOOL) {
+      width = 1;
+  }
 
   std::map<std::string, VCDSignal> & signal_set =
       is_reg ? root->regs : root->wires;
