@@ -191,6 +191,7 @@ Term Prover::to_orig_ts(Term t)
 bool Prover::compute_witness()
 {
   // TODO: make sure the solver state is SAT
+  int mm=0;
 
   for (int i = 0; i <= reached_k_ + 1; ++i) {
     witness_.push_back(UnorderedTermMap());
@@ -208,12 +209,18 @@ bool Prover::compute_witness()
       map[v] = r;
     }
 
+    mm=0;
+    logger.log(1,"zxy debug the size of ts_.named_terms():i={}, size={}",i,ts_.named_terms().size());
     for (const auto & elem : ts_.named_terms()) {
       const Term & ti = unroller_.at_time(elem.second, i);
       map[elem.second] = solver_->get_value(ti);
+      if(mm%10000==0)
+        logger.log(1,"zxy debug mm:{}",mm);
+      mm++;
     }
   }
 
+  logger.log(1,"zxy debug: return back from compute_witness");
   return true;
 }
 
